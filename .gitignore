@@ -1,0 +1,5 @@
+modelsim.ini
+vsim.dbg
+vsim.wlf
+work/
+*.bak
