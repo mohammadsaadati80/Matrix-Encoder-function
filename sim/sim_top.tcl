@@ -4,20 +4,18 @@
 	exec vlib work
 	vmap work work
 	
-	set TB					"tb_file_name"
+	set TB					"testbench"
 	set hdl_path			"../src/hdl"
-	set inc_path			"../src/inc"
 	
-	set run_time			"1 us"
-#	set run_time			"-all"
+	set run_time			"-all"
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/verilog_file_name.v
-	vlog 	+acc -incr -source  +define+SIM 	$inc_path/implementation_option.vh
+	vlog 	+acc -source  +define+SIM -O0	$hdl_path/permutation_func.v
+	vlog 	+acc -source  +define+SIM -O0	$hdl_path/requirements.v
+	vlog 	+acc -source  +define+SIM -O0	./sim/tb/$TB.v
 		
-	vlog 	+acc -incr -source  +incdir+$inc_path +define+SIM 	./tb/$TB.v
-	onerror {break}
+#	onerror {break}
 
 #================================ simulation ====================================
 
