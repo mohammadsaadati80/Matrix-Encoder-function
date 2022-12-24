@@ -98,3 +98,21 @@ module mux4to1 (a,b,c,d,s,w);
     end
     
 endmodule
+
+module add_sub (A,B,select,out, neg);
+    
+    parameter N = 8;
+    input  [N-1:0]A;
+    input  [N-1:0]B;
+    input  select;
+    output [N-1:0]out;
+    output neg;
+    
+    assign out = (select == 1) ? (A+B) : (A-B);
+    assign neg = (A < B);
+endmodule
+
+
+module permutation ();
+
+endmodule
