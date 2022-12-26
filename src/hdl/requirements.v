@@ -41,6 +41,30 @@ module counter (clk,pin,select,ld,rst,en,pout,co);
 
 endmodule
 
+module read_from_file (input_file_name, line_number, line);
+
+    // input string input_file_name;
+    input [9*8-1:0] input_file_name; // Can store 9 characters
+    input line_number;
+    output reg [24:0] line;
+
+    reg [24:0] data[0:63];
+    initial $readmemb(input_file_name, data);
+    // data = $fopen(input_file_name, r);
+    assign line = data[line_number];
+
+endmodule
+
+module write_to_file (output_file_name, line);
+
+    // input string output_file_name;
+    input [9*8-1:0] output_file_name; // Can store 9 characters
+    input [24:0] line;
+
+    initial $writememb(output_file_name, line);
+
+endmodule
+
 module shift_register (clk,pin,select,cin,ld,rst,en,pout);
     
     parameter N = 25;
