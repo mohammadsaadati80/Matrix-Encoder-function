@@ -1,7 +1,22 @@
-module datapath ();
+module datapath (input reg input_file_name, line_number, write_en, read_en, cnt_64_en, done, reg_rst, clk, output_file_name);
+	wire [24:0] line;
+	wire [5:0] cnt_64_value;
+	wire [24:0] permutation_out;
+	wire [24:0] reg_out;
+	wire [24:0] mux2to1_out;
+	Counter64 cnt1(.cnt_en(cnt_64_en), .value(cnt_64_value));  //inout
+	read_from_file reader1(.input_file_name(input_file_name), .line_number(cnt_64_value), .line(line));
+	register reg1(.clk(clk),.pin(mux2to1_out),.enable(read_en),.rst(reg_rst),.pout(reg_out));
+	swap swap1(.input_line(reg_out), .output_line(permutation_out), .enable(permute_en));
+	mux2to1 mux1 (.a(line),.b(permutation_out),.s(write_en),.w(mux2to1_out));
+	write_to_file (.output_file_name(output_file_name), .line(reg_out), .enable(write_en));
 
 endmodule
 
+//add enable to permutation
+//change requirement input and outputs
+//change read_en to register_en
+//add enable to write and probably read
 
 module controller (
 	start, counter_64_co, rst, clk, write_en , 
@@ -27,7 +42,7 @@ module controller (
 			ps <= ns;
 	end
 
-	always@(ps , counter_25_co) begin
+	always@(ps, counter_64_co ) begin
 		ns = Idle ;
 		case (ps)
 			Idle:
@@ -45,8 +60,8 @@ module controller (
 		endcase
 	end
 
-	always@(ps , counter_25_co) begin
-		write_en = 1'b0 ; read_en = 1'b0 ; cnt_64_en = 1'b0; cnt_25_en = 1'b0;
+	always@(ps , counter_64_co) begin
+		write_en = 1'b0 ; read_en = 1'b0 ; cnt_64_en = 1'b0; 
 		case (ps)
 		Idle: begin
 			reg_rst = 1'b1;
