@@ -142,7 +142,7 @@ module swap (input_line, output_line);
     input [24:0] input_line;
     output reg [24:0] output_line;
 
-    wire [24:0] temp;
+    reg [24:0] temp;
 
     integer i = 0;
     integer x = 0;
@@ -155,10 +155,10 @@ module swap (input_line, output_line);
         for(i = 0; i < 25; i = i + 1) begin
             x = i % 5;
             y = i / 5;
-            x = (x + 3) % 5
-            y = (y + 3) % 5
+            x = (x + 3) % 5;
+            y = (y + 3) % 5;
             new_x = y;
-            new_y = (2x + 3y) % 5;
+            new_y = (2 * x + 3 * y) % 5;
             new_x = (new_x - 3) % 5;
             new_y = (new_y - 3) % 5;
             new_pos = (new_y * 5) + new_x;

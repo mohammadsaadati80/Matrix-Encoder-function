@@ -1,15 +1,27 @@
-module datapath (input reg input_file_name, line_number, write_en, read_en, cnt_64_en, done, reg_rst, clk, output_file_name);
+module datapath (clk, input_file_name, line_number, write_en, read_en, cnt_64_en, done, reg_rst, output_file_name);
+	
+	input clk;
+	input input_file_name;
+	input line_number;
+	input write_en;
+	input read_en;
+	input cnt_64_en;
+	input done;
+	input reg_rst; 
+	input output_file_name;
+	
 	wire [24:0] line;
 	wire [5:0] cnt_64_value;
 	wire [24:0] permutation_out;
 	wire [24:0] reg_out;
 	wire [24:0] mux2to1_out;
+
 	Counter64 cnt1(.cnt_en(cnt_64_en), .value(cnt_64_value));  //inout
 	read_from_file reader1(.input_file_name(input_file_name), .line_number(cnt_64_value), .line(line));
 	register reg1(.clk(clk),.pin(mux2to1_out),.enable(read_en),.rst(reg_rst),.pout(reg_out));
 	swap swap1(.input_line(reg_out), .output_line(permutation_out), .enable(permute_en));
 	mux2to1 mux1 (.a(line),.b(permutation_out),.s(write_en),.w(mux2to1_out));
-	write_to_file (.output_file_name(output_file_name), .line(reg_out), .enable(write_en));
+	write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .enable(write_en));
 
 endmodule
 
@@ -22,6 +34,7 @@ module controller (
 	start, counter_64_co, rst, clk, write_en , 
 	read_en , cnt_64_en, done, reg_rst
 );
+
 	input start;
 	input counter_64_co;
 	input rst;
