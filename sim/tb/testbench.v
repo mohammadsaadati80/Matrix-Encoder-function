@@ -9,10 +9,10 @@ module TB();
     always #10 clk = ~clk;
     initial begin
         rst = 1;
-        #10 rst = 0;
-        #10 start = 1;
+        #5 rst = 0;
+        #35 start = 1;
         #10000 start = 0;
-        #10000 $finish;
+        $finish;
 
     end
 
