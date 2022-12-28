@@ -48,7 +48,11 @@ module controller (
 	output reg reg_rst;
 
 	reg [2:0] ps , ns ;
-	parameter [2:0] Idle = 0 , Beginn = 1 , Read = 2 , Swap = 3 , Write = 4, WW = 5;
+	parameter [2:0] Idle = 0 , Beginn = 1 , Read = 2 , PassInput = 3, Swap = 4 , PassOutput = 5, Write = 6; 
+	reg ss;
+
+
+	assign ss = (counter_64_co) ? 0 : start ;
 
 	always@(posedge clk , posedge rst) begin
 		if (rst == 1'b1)
@@ -61,16 +65,18 @@ module controller (
 		ns = Idle ;
 		case (ps)
 			Idle:
-				ns = (start) ? Beginn : Idle;
+				ns = (ss) ? Beginn : Idle;
 			Beginn:
 				ns = Read;
 			Read:
+				ns = PassInput;
+			PassInput:
 				ns = Swap;
 			Swap:
-				ns = Write ;
+				ns = PassOutput ;
+			PassOutput:
+				ns = Write;
 			Write:
-				ns = WW;
-			WW:
 				ns = (counter_64_co) ? Idle : Beginn;
 			default :
 				ns = Idle;
@@ -88,17 +94,20 @@ module controller (
 			done = (counter_64_co) ? 1'b1 : 1'b0;
 		end
 		Read : begin
-			reg_en = 1'b1;
+			
 			read_en = 1'b1;
+		end
+		PassInput : begin
+			reg_en = 1'b1;
 		end
 		Swap : begin
 			permute_en = 1'b1;
 		end
-		Write : begin
+		PassOutput : begin
 			reg_en = 1'b1;
 			mux_en = 1'b1;
 		end
-		WW : begin
+		Write : begin
 			cnt_64_en = 1'b1;
 			write_en = 1'b1;
 		end
