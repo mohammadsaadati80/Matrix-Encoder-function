@@ -45,7 +45,7 @@ module read_from_file (input_file_name, line_number, line);
 
     // input string input_file_name;
     input [9*8-1:0] input_file_name; // Can store 9 characters
-    input line_number;
+    input [5:0] line_number;
     output reg [24:0] line;
 
     reg [24:0] data[0:63];
@@ -58,7 +58,7 @@ endmodule
 module write_to_file (output_file_name, en, line);
 
     // input string output_file_name;
-    input [9*8-1:0] output_file_name; // Can store 9 characters
+    input [10*8-1:0] output_file_name; // Can store 9 characters
     input en;
     input [24:0] line;
 
