@@ -49,8 +49,18 @@ module read_from_file (input_file_name, line_number, line);
     output reg [24:0] line;
 
     reg [24:0] data[0:63];
-    initial $readmemb(input_file_name, data);
-    // data = $fopen(input_file_name, r);
+    // initial $readmemb(input_file_name, data);
+    // // data = $fopen(input_file_name, r);
+
+    integer data_file; 
+    integer scan_file;
+    
+    initial begin
+        data_file = $fopen("input.txt", "r");
+        scan_file = $fscanf(data_file, "%d\n", line); 
+    end
+
+
     assign line = data[line_number];
 
 endmodule
@@ -62,9 +72,16 @@ module write_to_file (output_file_name, en, line);
     input en;
     input [24:0] line;
 
+    integer f,i;
+
     always @(en) begin
         if (en) begin
-            $writememb(output_file_name, line);
+            f = $fopen("output.txt","a");
+            for (i = 0; i<25; i=i+1)
+                $fwrite(f,"%b",line[i]);
+            $fwrite(f,"\n");
+            $fclose(f);  
+
         end
     end 
 
