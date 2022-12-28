@@ -13,21 +13,21 @@ module TB();
 
     always #10 clk = ~clk;
     initial begin
-        // $sformat(input_file_name, "input_%0d.txt", i);
-        // $sformat(output_file_name, "output_%0d.txt", i);
+        $sformat(input_file_name, "input_%0d.txt", i);
+        $sformat(output_file_name, "output_%0d.txt", i);
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        // while (i < 3) begin
-        //     if (done) begin
-        //         #23 rst = 1;
-        //         i = i + 1;
-        //         $sformat(input_file_name, "input_%0d.txt", i);
-        //         $sformat(output_file_name, "output_%0d.txt", i);
-        //         #23 rst = 0;
-        //     end
-        // end
-        #10000 start = 0;
+        while (i < 3) begin
+            if (done) begin
+                #23 rst = 1;
+                i = i + 1;
+                $sformat(input_file_name, "input_%0d.txt", i);
+                $sformat(output_file_name, "output_%0d.txt", i);
+                #23 rst = 0;
+            end
+        end
+        #7700 start = 0;
         $finish;
     end
 

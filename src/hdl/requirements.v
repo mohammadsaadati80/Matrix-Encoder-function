@@ -50,25 +50,18 @@ module read_from_file (clk, en, input_file_name, line_number, line);
     input en;
     output reg [24:0] line;
 
-    reg [24:0] data[0:63];
+    // reg [24:0] data[0:63];
     // initial $readmemb(input_file_name, data);
-    // // data = $fopen(input_file_name, r);
+    // assign line = data[line_number];
 
     integer data_file; 
     integer scan_file;
-    
-    // initial begin
-    //     data_file = $fopen("input.txt", "r");
-    //     scan_file = $fscanf(data_file, "%d\n", line); 
-    // end
-
     `define NULL 0    
 
     initial begin
-    data_file = $fopen(input_file_name, "r");
+    data_file = $fopen("input_2.txt", "r");
     if (data_file == `NULL) begin
         $display("data_file handle was NULL");
-        $finish;
     end
     end
 
@@ -79,9 +72,6 @@ module read_from_file (clk, en, input_file_name, line_number, line);
         //use captured_data as you would any other wire or reg value;
     end
     end
-
-
-    // assign line = data[line_number];
 
 endmodule
 
@@ -97,7 +87,7 @@ module write_to_file (output_file_name, en, line);
 
     always @(en) begin
         if (en) begin
-            f = $fopen(output_file_name,"a");
+            f = $fopen("output_2.txt","a");
             for (i = 0; i<25; i=i+1)
                 $fwrite(f,"%b",line[24 - i]);
             $fwrite(f,"\n");
