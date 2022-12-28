@@ -3,14 +3,14 @@ module datapath (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, c
 	
 	input clk;
 	input rst;
-	input [9*8-1:0] input_file_name;
+	input [12*8-1:0] input_file_name;
 	input write_en;
 	input read_en;
 	input mux_en;
 	input reg_en;
 	input cnt_64_en;
 	input reg_rst; 
-	input [10*8-1:0] output_file_name;
+	input [13*8-1:0] output_file_name;
 	input permute_en;
 	output counter_co;
 	
@@ -94,7 +94,6 @@ module controller (
 			done = (counter_64_co) ? 1'b1 : 1'b0;
 		end
 		Read : begin
-			
 			read_en = 1'b1;
 		end
 		PassInput : begin
@@ -117,13 +116,14 @@ module controller (
 endmodule
 
 
-module permutation_func (clk, rst, start, input_file_name, output_file_name);
+module permutation_func (clk, rst, start, input_file_name, output_file_name, donee);
 
 	input clk;
 	input rst;
-	input [9*8-1:0] input_file_name;
-	input [10*8-1:0] output_file_name;
+	input [12*8-1:0] input_file_name;
+	input [13*8-1:0] output_file_name;
 	input start;
+	output reg donee;
 
 	wire counter_64_co;
 	wire write_en;
@@ -134,6 +134,8 @@ module permutation_func (clk, rst, start, input_file_name, output_file_name);
 	wire reg_rst;
 	wire permute_en;
 	wire read_en;
+
+	assign donee = counter_64_co;
 
 	controller cntrl( .start(start), .counter_64_co(counter_64_co), .rst(rst), .clk(clk), .write_en(write_en), .read_en(read_en), .mux_en(mux_en),
 	.reg_en(reg_en), .cnt_64_en(cnt_64_en), .done(done), .reg_rst(reg_rst), .permute_en(permute_en) );

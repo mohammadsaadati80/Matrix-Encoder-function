@@ -44,7 +44,7 @@ endmodule
 module read_from_file (clk, en, input_file_name, line_number, line);
 
     // input string input_file_name;
-    input [9*8-1:0] input_file_name; // Can store 9 characters
+    input [12*8-1:0] input_file_name; // Can store 9 characters
     input [5:0] line_number;
     input clk;
     input en;
@@ -65,7 +65,7 @@ module read_from_file (clk, en, input_file_name, line_number, line);
     `define NULL 0    
 
     initial begin
-    data_file = $fopen("input.txt", "r");
+    data_file = $fopen(input_file_name, "r");
     if (data_file == `NULL) begin
         $display("data_file handle was NULL");
         $finish;
@@ -88,7 +88,7 @@ endmodule
 module write_to_file (output_file_name, en, line);
 
     // input string output_file_name;
-    input [10*8-1:0] output_file_name; // Can store 9 characters
+    input [13*8-1:0] output_file_name; // Can store 9 characters
     input en;
     input [24:0] line;
 
@@ -97,7 +97,7 @@ module write_to_file (output_file_name, en, line);
 
     always @(en) begin
         if (en) begin
-            f = $fopen("output.txt","a");
+            f = $fopen(output_file_name,"a");
             for (i = 0; i<25; i=i+1)
                 $fwrite(f,"%b",line[24 - i]);
             $fwrite(f,"\n");
