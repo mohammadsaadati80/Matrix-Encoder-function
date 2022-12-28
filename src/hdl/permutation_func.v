@@ -3,14 +3,14 @@ module datapath (clk, rst, input_file_name, write_en, reg_en, cnt_64_en,
 	
 	input clk;
 	input rst;
-	input input_file_name;
+	input [9*8-1:0] input_file_name;
 	input write_en;
 	input reg_en;
 	input cnt_64_en;
 	input reg_rst; 
-	input output_file_name;
+	input [10*8-1:0] output_file_name;
 	input permute_en;
-	output reg counter_co;
+	output counter_co;
 	
 	wire [24:0] line;
 	wire [5:0] cnt_64_value;
@@ -18,12 +18,12 @@ module datapath (clk, rst, input_file_name, write_en, reg_en, cnt_64_en,
 	wire [24:0] reg_out;
 	wire [24:0] mux2to1_out;
 
-	Counter64 #(6) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1), .rst(rst), .ld(0), .co(counter_co));
+	counter #(6) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(rst), .ld(1'b0), .co(counter_co));
 	read_from_file reader1(.input_file_name(input_file_name), .line_number(cnt_64_value), .line(line));
 	register reg1(.clk(clk),.pin(mux2to1_out),.en(reg_en),.rst(reg_rst),.pout(reg_out));
-	swap swap1(.input_line(reg_out), .enable(permute_en), .output_line(permutation_out));
+	swap swap1(.input_line(reg_out), .swap_en(permute_en), .output_line(permutation_out));
 	mux2to1 #(25) mux1 (.a(line),.b(permutation_out),.s(write_en),.w(mux2to1_out));
-	write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .enable(write_en));
+	write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .en(write_en));
 
 endmodule
 
@@ -102,8 +102,8 @@ module permutation_func (clk, rst, start, input_file_name, output_file_name);
 
 	input clk;
 	input rst;
-	input input_file_name;
-	input output_file_name;
+	input [9*8-1:0] input_file_name;
+	input [10*8-1:0] output_file_name;
 	input start;
 
 	wire counter_64_co;
