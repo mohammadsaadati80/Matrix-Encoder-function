@@ -1,14 +1,16 @@
-module datapath (clk, input_file_name, line_number, write_en, read_en, cnt_64_en, done, reg_rst, output_file_name);
+module datapath (clk, rst, input_file_name, write_en, reg_en, cnt_64_en, 
+				reg_rst, output_file_name, permute_en, counter_co);
 	
 	input clk;
+	input rst;
 	input input_file_name;
-	input line_number;
 	input write_en;
-	input read_en;
+	input reg_en;
 	input cnt_64_en;
-	input done;
 	input reg_rst; 
 	input output_file_name;
+	input permute_en;
+	output reg counter_co;
 	
 	wire [24:0] line;
 	wire [5:0] cnt_64_value;
@@ -16,37 +18,33 @@ module datapath (clk, input_file_name, line_number, write_en, read_en, cnt_64_en
 	wire [24:0] reg_out;
 	wire [24:0] mux2to1_out;
 
-	Counter64 cnt1(.cnt_en(cnt_64_en), .value(cnt_64_value));  //inout
+	Counter64 #(6) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1), .rst(rst), .ld(0), .co(counter_co));
 	read_from_file reader1(.input_file_name(input_file_name), .line_number(cnt_64_value), .line(line));
-	register reg1(.clk(clk),.pin(mux2to1_out),.enable(read_en),.rst(reg_rst),.pout(reg_out));
-	swap swap1(.input_line(reg_out), .output_line(permutation_out), .enable(permute_en));
-	mux2to1 mux1 (.a(line),.b(permutation_out),.s(write_en),.w(mux2to1_out));
+	register reg1(.clk(clk),.pin(mux2to1_out),.en(reg_en),.rst(reg_rst),.pout(reg_out));
+	swap swap1(.input_line(reg_out), .enable(permute_en), .output_line(permutation_out));
+	mux2to1 #(25) mux1 (.a(line),.b(permutation_out),.s(write_en),.w(mux2to1_out));
 	write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .enable(write_en));
 
 endmodule
 
-//add enable to permutation
-//change requirement input and outputs
-//change read_en to register_en
-//add enable to write and probably read
-
 module controller (
 	start, counter_64_co, rst, clk, write_en , 
-	read_en , cnt_64_en, done, reg_rst
+	reg_en , cnt_64_en, done, reg_rst, permute_en
 );
 
 	input start;
 	input counter_64_co;
 	input rst;
 	input clk;
+	output reg permute_en;
 	output reg write_en; 
-	output reg read_en;
+	output reg reg_en;
 	output reg cnt_64_en;
 	output reg done;
 	output reg reg_rst;
 
 	reg [2:0] ps , ns ;
-	parameter [2:0] Idle = 0 , Begin = 1 , Read = 2 , Swap = 3 , Write = 4;
+	parameter [2:0] Idle = 0 , Beginn = 1 , Read = 2 , Swap = 3 , Write = 4;
 
 	always@(posedge clk , posedge rst) begin
 		if (rst == 1'b1)
@@ -55,37 +53,42 @@ module controller (
 			ps <= ns;
 	end
 
-	always@(ps, counter_64_co ) begin
+	always@(ps, counter_64_co) begin
 		ns = Idle ;
 		case (ps)
 			Idle:
-				ns = (start) ? Begin : Idle;
-			Begin:
+				ns = (start) ? Beginn : Idle;
+			Beginn:
 				ns = Read;
 			Read:
 				ns = Swap;
 			Swap:
 				ns = Write ;
 			Write:
-				ns = (counter_64_co) ? Idle : Begin;
+				ns = (counter_64_co) ? Idle : Beginn;
 			default :
 				ns = Idle;
 		endcase
 	end
 
 	always@(ps , counter_64_co) begin
-		write_en = 1'b0 ; read_en = 1'b0 ; cnt_64_en = 1'b0; 
+		write_en = 1'b0 ; reg_en = 1'b0 ; cnt_64_en = 1'b0; reg_rst = 1'b0; permute_en = 1'b0;
+		done = 1'b0; 
 		case (ps)
 		Idle: begin
 			reg_rst = 1'b1;
 		end
-		Begin : begin
+		Beginn : begin
 			done = (counter_64_co) ? 1'b1 : 1'b0;
 		end
 		Read : begin
-			read_en = 1'b1;
+			reg_en = 1'b1;
+		end
+		Swap : begin
+			permute_en = 1'b1;
 		end
 		Write : begin
+			reg_en = 1'b1;
 			cnt_64_en = 1'b1;
 			write_en = 1'b1;
 		end
@@ -95,6 +98,28 @@ module controller (
 endmodule
 
 
-module permutation_func ();
+module permutation_func (clk, rst, start, input_file_name, output_file_name);
+
+	input clk;
+	input rst;
+	input input_file_name;
+	input output_file_name;
+	input start;
+
+	wire counter_64_co;
+	wire write_en;
+	wire reg_en;
+	wire cnt_64_en;
+	wire done;
+	wire reg_rst;
+	wire permute_en;
+
+	controller cntrl( .start(start), .counter_64_co(counter_64_co), .rst(rst), .clk(clk), .write_en(write_en), 
+	.reg_en(reg_en), .cnt_64_en(cnt_64_en), .done(done), .reg_rst(reg_rst), .permute_en(permute_en) );
+
+	datapath dp(.clk(clk), .rst(rst), .input_file_name(input_file_name), .write_en(write_en), .reg_en(reg_en), .cnt_64_en(cnt_64_en), 
+				.reg_rst(reg_rst), .output_file_name(output_file_name), .permute_en(permute_en), .counter_co(counter_64_co));
+
+
 
 endmodule
