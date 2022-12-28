@@ -11,9 +11,9 @@
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -source  +define+SIM -O0	$hdl_path/permutation_func.v
-	vlog 	+acc -source  +define+SIM -O0	$hdl_path/requirements.v
-	vlog 	+acc -source  +define+SIM -O0	./sim/tb/$TB.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/permutation_func.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/requirements.v
+	vlog 	+acc -incr -source  +define+SIM 	./tb/$TB.v
 		
 #	onerror {break}
 
