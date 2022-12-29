@@ -27,7 +27,7 @@ module counter (clk,pin,select,ld,rst,en,pout,co);
     output reg [N-1:0]pout;
 
     always @(posedge clk) begin
-        if(rst) pout <= 0;
+        if(rst) pout <= 7'b0111111;
         else if(ld) pout <= pin;
         else begin
             if(en)begin
@@ -60,7 +60,7 @@ endmodule
 module write_to_file ( output_file_name, en, line);
 
     // input string output_file_name;
-    input [13*8-1:0] output_file_name; // Can store 9 characters
+    input [13*8-1:0] output_file_name; // Can store 13 characters
     input en;
     input [24:0] line;
 

@@ -14,18 +14,18 @@ module datapath (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, c
 	input permute_en;
 	input [24:0] line_in;
 	output counter_co;
-	output [5:0] cnt_value;
+	output [6:0] cnt_value;
 	output [24:0] write_value;
 	
 	wire [24:0] line;
-	wire [5:0] cnt_64_value;
+	wire [6:0] cnt_64_value;
 	wire [24:0] permutation_out;
 	wire [24:0] reg_out;
 	wire [24:0] mux2to1_out;
 	assign cnt_value = cnt_64_value;
 	assign write_value = reg_out;
 
-	counter #(6) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(rst), .ld(1'b0), .co(counter_co));
+	counter #(7) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(rst), .ld(1'b0), .co(counter_co));
 	read_from_file reader1(.clk(clk), .en(read_en),  .line_in(line_in), .line(line));
 	register reg1(.clk(clk),.pin(mux2to1_out),.en(reg_en),.rst(reg_rst),.pout(reg_out));
 	swap swap1(.input_line(reg_out), .swap_en(permute_en), .output_line(permutation_out));
@@ -54,10 +54,10 @@ module controller (
 
 	reg [2:0] ps , ns ;
 	parameter [2:0] Idle = 0 , Beginn = 1 , Read = 2 , PassInput = 3, Swap = 4 , PassOutput = 5, Write = 6; 
-	reg ss;
+	reg check_start;
 
 
-	assign ss = (counter_64_co) ? 0 : start ;
+	assign check_start = (counter_64_co) ? 0 : start ;
 
 	always@(posedge clk , posedge rst) begin
 		if (rst == 1'b1)
@@ -70,7 +70,7 @@ module controller (
 		ns = Idle ;
 		case (ps)
 			Idle:
-				ns = (ss) ? Beginn : Idle;
+				ns = (check_start) ? Beginn : Idle;
 			Beginn:
 				ns = Read;
 			Read:
@@ -131,7 +131,7 @@ module permutation_func (clk, rst, start, input_file_name, output_file_name, don
 	input [24:0] line_in;
 	output reg donee;
 	output reg write_enable;
-	output [5:0] cnt_value;
+	output [6:0] cnt_value;
 	output [24:0] write_value;
 
 	wire counter_64_co;
