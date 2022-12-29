@@ -28,16 +28,21 @@ module testbench();
 	$fwrite(f,"\n");
     end
     
-    //always @(posedge done) begin
-	//j <= j + 1;
-    //   $sformat(input_file_name, "input_%0d.txt", j);
-    //    $sformat(output_file_name, "output_%0d.txt", j);
-    //end
+    always @(posedge done) begin
+	j = j + 1;
+        $sformat(input_file_name, "input_%0d.txt", j);
+        $sformat(output_file_name, "output_%0d.txt", j);
+	$readmemb (input_file_name, mem);
+	start = 0;
+        rst = 1;
+        #23 rst = 0;
+        #33 start = 1;
+    end
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "input_00.txt");
-	$sformat(output_file_name, "output_00.txt");
+	$sformat(input_file_name, "input_%0d.txt", j);
+	$sformat(output_file_name, "output_%0d.txt", j);
         // $sformat(input_file_name, "input_%0d.txt", i);
         // $sformat(output_file_name, "output_%0d.txt", i);
 	  for (i=0; i<=63; i=i+1)
@@ -56,7 +61,7 @@ module testbench();
         //         #23 rst = 0;
         //     end
         // end
-        #7700 start = 0;
+        #15400 start = 0;
         $finish;
     end
 
