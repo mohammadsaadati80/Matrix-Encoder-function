@@ -1,5 +1,5 @@
 module datapath (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, cnt_64_en, 
-				reg_rst, output_file_name, permute_en, counter_co);
+				reg_rst, output_file_name, permute_en, counter_co, cnt_value, line_in, write_value);
 	
 	input clk;
 	input rst;
@@ -12,20 +12,25 @@ module datapath (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, c
 	input reg_rst; 
 	input [13*8-1:0] output_file_name;
 	input permute_en;
+	input [24:0] line_in;
 	output counter_co;
+	output [5:0] cnt_value;
+	output [24:0] write_value;
 	
 	wire [24:0] line;
 	wire [5:0] cnt_64_value;
 	wire [24:0] permutation_out;
 	wire [24:0] reg_out;
 	wire [24:0] mux2to1_out;
+	assign cnt_value = cnt_64_value;
+	assign write_value = reg_out;
 
 	counter #(6) cnt1(.clk(clk), .en(cnt_64_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(rst), .ld(1'b0), .co(counter_co));
-	read_from_file reader1(.clk(clk), .en(read_en), .input_file_name(input_file_name), .line_number(cnt_64_value), .line(line));
+	read_from_file reader1(.clk(clk), .en(read_en),  .line_in(line_in), .line(line));
 	register reg1(.clk(clk),.pin(mux2to1_out),.en(reg_en),.rst(reg_rst),.pout(reg_out));
 	swap swap1(.input_line(reg_out), .swap_en(permute_en), .output_line(permutation_out));
 	mux2to1 #(25) mux1 (.a(line),.b(permutation_out),.s(mux_en),.w(mux2to1_out));
-	write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .en(write_en));
+	//write_to_file write1(.output_file_name(output_file_name), .line(reg_out), .en(write_en));
 
 endmodule
 
@@ -116,14 +121,18 @@ module controller (
 endmodule
 
 
-module permutation_func (clk, rst, start, input_file_name, output_file_name, donee);
+module permutation_func (clk, rst, start, input_file_name, output_file_name, donee, cnt_value, line_in, write_enable, write_value);
 
 	input clk;
 	input rst;
 	input [12*8-1:0] input_file_name;
 	input [13*8-1:0] output_file_name;
 	input start;
+	input [24:0] line_in;
 	output reg donee;
+	output reg write_enable;
+	output [5:0] cnt_value;
+	output [24:0] write_value;
 
 	wire counter_64_co;
 	wire write_en;
@@ -134,14 +143,18 @@ module permutation_func (clk, rst, start, input_file_name, output_file_name, don
 	wire reg_rst;
 	wire permute_en;
 	wire read_en;
+	wire [24:0] write_val;
 
 	assign donee = counter_64_co;
+	assign write_enable = write_en;
+	assign write_value = write_val;
 
 	controller cntrl( .start(start), .counter_64_co(counter_64_co), .rst(rst), .clk(clk), .write_en(write_en), .read_en(read_en), .mux_en(mux_en),
 	.reg_en(reg_en), .cnt_64_en(cnt_64_en), .done(done), .reg_rst(reg_rst), .permute_en(permute_en) );
 
 	datapath dp(.clk(clk), .rst(rst), .input_file_name(input_file_name), .write_en(write_en), .read_en(read_en), .reg_en(reg_en), .cnt_64_en(cnt_64_en), 
-			.mux_en(mux_en),	.reg_rst(reg_rst), .output_file_name(output_file_name), .permute_en(permute_en), .counter_co(counter_64_co));
+			.mux_en(mux_en),	.reg_rst(reg_rst), .output_file_name(output_file_name), .permute_en(permute_en), 
+			.counter_co(counter_64_co), .cnt_value(cnt_value), .line_in(line_in), .write_value(write_val));
 
 
 
