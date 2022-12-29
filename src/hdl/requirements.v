@@ -41,41 +41,23 @@ module counter (clk,pin,select,ld,rst,en,pout,co);
 
 endmodule
 
-module read_from_file (clk, en, input_file_name, line_number, line);
+module read_from_file (clk, en, line_in, line);
 
     // input string input_file_name;
-    input [12*8-1:0] input_file_name; // Can store 9 characters
-    input [5:0] line_number;
+    input [24:0] line_in;
     input clk;
     input en;
     output reg [24:0] line;
-
-    // reg [24:0] data[0:63];
-    // initial $readmemb(input_file_name, data);
-    // assign line = data[line_number];
-
-    integer data_file; 
-    integer scan_file;
-    `define NULL 0    
-
-    initial begin
-    data_file = $fopen("input_2.txt", "r");
-    if (data_file == `NULL) begin
-        $display("data_file handle was NULL");
-    end
-    end
-
-    always @(posedge clk) begin
-        if (en)
-            scan_file = $fscanf(data_file, "%b\n", line); 
-    if (!$feof(data_file)) begin
-        //use captured_data as you would any other wire or reg value;
-    end
-    end
+	
+	always@(en, clk) begin
+		if (en) begin
+			line <= line_in;
+		end
+	end
 
 endmodule
 
-module write_to_file (output_file_name, en, line);
+module write_to_file ( output_file_name, en, line);
 
     // input string output_file_name;
     input [13*8-1:0] output_file_name; // Can store 9 characters
@@ -87,7 +69,7 @@ module write_to_file (output_file_name, en, line);
 
     always @(en) begin
         if (en) begin
-            f = $fopen("output_2.txt","a");
+            f = $fopen("output_00.txt","a");
             for (i = 0; i<25; i=i+1)
                 $fwrite(f,"%b",line[24 - i]);
             $fwrite(f,"\n");
