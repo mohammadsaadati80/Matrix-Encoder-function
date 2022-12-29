@@ -66,7 +66,7 @@ module controller (
 			ps <= ns;
 	end
 
-	always@(ps, start) begin
+	always@(ps, start, counter_64_co) begin
 		ns = Idle ;
 		case (ps)
 			Idle:
