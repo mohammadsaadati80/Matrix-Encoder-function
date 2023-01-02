@@ -1,27 +1,20 @@
 module controller (
-	start, counter_64_co, rst, clk, write_en , read_en, mux_en,
-	reg_en , cnt_64_en, done, reg_rst, permute_en
+	inreg_en, cnt_en, cnt_rst, wr_en, start, cnt_co, clk, rst, done
 );
 
 	input start;
-	input counter_64_co;
+	input cnt_co;
 	input rst;
 	input clk;
-	output reg permute_en;
-	output reg write_en; 
-	output reg read_en; 
-	output reg mux_en;
-	output reg reg_en;
-	output reg cnt_64_en;
+	output reg inreg_en;
+	output reg cnt_en; 
+	output reg cnt_rst; 
+	output reg wr_en;
 	output reg done;
-	output reg reg_rst;
+
 
 	reg [2:0] ps , ns ;
-	parameter [2:0] Idle = 0 , Beginn = 1 , Read = 2 , PassInput = 3, Swap = 4 , PassOutput = 5, Write = 6; 
-	reg check_start;
-
-
-	assign check_start = (counter_64_co) ? 0 : start ;
+	parameter [2:0] Idle = 0 , First_Read = 1 , Write = 2 , Read = 3, Count_Up = 4;
 
 	always@(posedge clk , posedge rst) begin
 		if (rst == 1'b1)
@@ -30,54 +23,42 @@ module controller (
 			ps <= ns;
 	end
 
-	always@(ps, start, counter_64_co) begin
+	always@(ps, start, cnt_co) begin
 		ns = Idle ;
 		case (ps)
 			Idle:
-				ns = (check_start) ? Beginn : Idle;
-			Beginn:
-				ns = Read;
-			Read:
-				ns = PassInput;
-			PassInput:
-				ns = Swap;
-			Swap:
-				ns = PassOutput ;
-			PassOutput:
+				ns = (start) ? First_Read : Idle;
+			First_Read:
 				ns = Write;
 			Write:
-				ns = (counter_64_co) ? Idle : Beginn;
+				ns = Read;
+			Read:
+				ns = Count_Up;
+			Count_Up:
+				ns = (cnt_co) ? Idle : Write;
 			default :
 				ns = Idle;
 		endcase
 	end
 
-	always@(ps , counter_64_co) begin
-		write_en = 1'b0 ; reg_en = 1'b0 ; cnt_64_en = 1'b0; reg_rst = 1'b0; permute_en = 1'b0; read_en = 1'b0; mux_en = 1'b0;
-		done = 1'b0; 
+	always@(ps , cnt_co) begin
+		inreg_en = 1'b0 ; cnt_en = 1'b0 ; cnt_rst = 1'b0; wr_en = 1'b0; done = 1'b0;
 		case (ps)
 		Idle: begin
-			reg_rst = 1'b1;
+			cnt_rst = 1'b1;
 		end
-		Beginn : begin
-			done = (counter_64_co) ? 1'b1 : 1'b0;
-		end
-		Read : begin
-			read_en = 1'b1;
-		end
-		PassInput : begin
-			reg_en = 1'b1;
-		end
-		Swap : begin
-			permute_en = 1'b1;
-		end
-		PassOutput : begin
-			reg_en = 1'b1;
-			mux_en = 1'b1;
+		First_Read : begin
+			inreg_en = 1'b1;
+			cnt_en = 1'b1;
 		end
 		Write : begin
-			cnt_64_en = 1'b1;
-			write_en = 1'b1;
+			wr_en = 1'b1;
+		end
+		Read : begin
+			inreg_en = 1'b1;
+		end
+		Count_Up : begin
+			cnt_en = 1'b1;
 		end
 		endcase
 	end
