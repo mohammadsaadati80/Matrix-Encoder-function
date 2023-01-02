@@ -10,7 +10,7 @@ module testbench();
     wire [24:0] wr_val;
 
     integer i;
-    integer j = 9;
+    integer j = 1;
     reg [12*8:1] input_file_name;
     reg [13*8:1] output_file_name;
     integer f;
@@ -30,7 +30,7 @@ module testbench();
     
     always @(posedge done) begin
 	    j = j + 1;
-        $sformat(input_file_name, "%0d.in", j);
+        $sformat(input_file_name, "input_%0d.txt", j);
         $sformat(output_file_name, "output_%0d.txt", j);
 	    $readmemb (input_file_name, mem);
 	start = 0;
@@ -41,7 +41,7 @@ module testbench();
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "%0d.in", j);
+	$sformat(input_file_name, "input_%0d.txt", j);
 	$sformat(output_file_name, "output_%0d.txt", j);
         // $sformat(input_file_name, "input_%0d.txt", i);
         // $sformat(output_file_name, "output_%0d.txt", i);
