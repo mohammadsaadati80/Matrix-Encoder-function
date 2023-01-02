@@ -50,7 +50,7 @@ module testbench();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(3*3860) start = 0;
+        #(3*3882) start = 0;
         $finish;
     end
 

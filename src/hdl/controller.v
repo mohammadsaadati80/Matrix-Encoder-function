@@ -58,9 +58,10 @@ module controller (
 		end
 		Read : begin
 			inreg_en = 1'b1;
+			cnt_en = 1'b1;
 		end
 		Count_Up : begin
-			cnt_en = 1'b1;
+			// cnt_en = 1'b1;
 			cu = 1'b1;
 		end
 		endcase
