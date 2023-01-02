@@ -12,7 +12,8 @@ module controller (
 	output reg wr_en;
 	output reg done;
 
-	assign done = cnt_co;
+	reg cu;
+	assign done = cnt_co & cu;
 
 	reg [2:0] ps , ns ;
 	parameter [2:0] Idle = 0 , First_Read = 1 , Write = 2 , Read = 3, Count_Up = 4;
@@ -43,7 +44,7 @@ module controller (
 	end
 
 	always@(ps , cnt_co) begin
-		inreg_en = 1'b0 ; cnt_en = 1'b0 ; cnt_rst = 1'b0; wr_en = 1'b0; done = 1'b0;
+		inreg_en = 1'b0 ; cnt_en = 1'b0 ; cnt_rst = 1'b0; wr_en = 1'b0; done = 1'b0; cu = 1'b0;
 		case (ps)
 		Idle: begin
 			cnt_rst = 1'b1;
@@ -60,6 +61,7 @@ module controller (
 		end
 		Count_Up : begin
 			cnt_en = 1'b1;
+			cu = 1'b1;
 		end
 		endcase
 	end

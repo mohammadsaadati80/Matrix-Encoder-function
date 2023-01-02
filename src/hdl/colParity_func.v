@@ -6,7 +6,7 @@ module colParity_func (clk, rst, start, donee, cnt_value, line_in, write_enable,
 	input [24:0] line_in;
 	output reg donee;
 	output reg write_enable;
-	output [5:0] cnt_value;
+	output [6:0] cnt_value;
 	output [24:0] write_value;
 
 	wire counter_64_co;
@@ -17,7 +17,7 @@ module colParity_func (clk, rst, start, donee, cnt_value, line_in, write_enable,
 	wire [24:0] write_val;
 	wire cnt_rst;
 
-	assign donee = counter_64_co;
+	assign donee = done;
 	assign write_enable = write_en;
 	assign write_value = write_val;
 
