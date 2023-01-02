@@ -20,7 +20,7 @@ module testbench();
     colParity_func uut(.clk(clk), .rst(rst), .start(start),
 	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val));
 
-    assign line_in = mem[(cnt_value+63)%64];
+    assign line_in = mem[(cnt_value)%64];
 
     always @(posedge wr_en) begin
 	f = $fopen(output_file_name,"a");
@@ -28,16 +28,16 @@ module testbench();
 	$fwrite(f,"\n");
     end
     
-    always @(posedge done) begin
-	    j = j + 1;
-        $sformat(input_file_name, "input_%0d.txt", j);
-        $sformat(output_file_name, "output_%0d.txt", j);
-	    $readmemb (input_file_name, mem);
-	    start = 0;
-        rst = 1;
-        #23 rst = 0;
-        #33 start = 1;
-    end
+    // always @(posedge done) begin
+	//     j = j + 1;
+    //     $sformat(input_file_name, "input_%0d.txt", j);
+    //     $sformat(output_file_name, "output_%0d.txt", j);
+	//     $readmemb (input_file_name, mem);
+	//     start = 0;
+    //     rst = 1;
+    //     #23 rst = 0;
+    //     #33 start = 1;
+    // end
 
     always #10 clk = ~clk;
     initial begin
@@ -50,7 +50,7 @@ module testbench();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(1*4000) start = 0;
+        #(1*3840) start = 0;
         $finish;
     end
 
