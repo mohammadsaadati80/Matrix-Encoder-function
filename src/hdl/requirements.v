@@ -27,7 +27,7 @@ module counter (clk,pin,select,ld,rst,en,pout,co);
     output reg [N-1:0]pout;
 
     always @(posedge clk) begin
-        if(rst) pout <= 6'b111111;
+        if(rst) pout <= 0;
         else if(ld) pout <= pin;
         else begin
             if(en)begin
