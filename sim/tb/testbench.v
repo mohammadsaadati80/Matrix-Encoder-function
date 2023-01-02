@@ -4,7 +4,7 @@ module testbench();
 
     reg clk = 0, rst = 0, start = 0;
     wire done;
-    wire [6:0] cnt_value;
+    wire [5:0] cnt_value;
     reg [24:0] line_in;
     wire wr_en;
     wire [24:0] wr_val;
@@ -17,10 +17,10 @@ module testbench();
 
     reg [24:0] mem [0:63];
 
-    permutation_func uut(.clk(clk), .rst(rst), .start(start), .input_file_name(input_file_name), .output_file_name(output_file_name),
+    colParity_func uut(.clk(clk), .rst(rst), .start(start), .input_file_name(input_file_name), .output_file_name(output_file_name),
 	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val));
 
-    assign line_in = mem[cnt_value - 7'b0111111];
+    assign line_in = mem[cnt_value];
 
     always @(posedge wr_en) begin
 	f = $fopen(output_file_name,"a");

@@ -1,4 +1,4 @@
-module permutation_func (clk, rst, start, input_file_name, output_file_name, donee, cnt_value, line_in, write_enable, write_value);
+module colParity_func (clk, rst, start, input_file_name, output_file_name, donee, cnt_value, line_in, write_enable, write_value);
 
 	input clk;
 	input rst;

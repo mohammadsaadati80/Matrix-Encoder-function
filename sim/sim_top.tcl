@@ -11,11 +11,11 @@
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/permutation_func.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/colParity_func.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/requirements.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/controller.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/datapath.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/swap.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/read_from_file.v
 	vlog 	+acc -incr -source  +define+SIM 	./tb/$TB.v
 		
