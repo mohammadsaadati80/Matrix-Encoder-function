@@ -10,7 +10,7 @@ module testbench_2();
     wire [24:0] wr_val;
 
     integer i;
-    integer j = 0;
+    integer j = 1;
     reg [12*8:1] input_file_name;
     reg [13*8:1] output_file_name;
     integer f;
@@ -30,8 +30,8 @@ module testbench_2();
     
     always @(posedge done) begin
 	    j = j + 1;
-        $sformat(input_file_name, "input_%0d.txt", j);
-        $sformat(output_file_name, "output_%0d.txt", j);
+        $sformat(input_file_name, "input%0d.txt", j);
+        $sformat(output_file_name, "output%0d.txt", j);
 	    $readmemb (input_file_name, mem);
 	    start = 0;
         rst = 1;
@@ -41,8 +41,8 @@ module testbench_2();
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "input_%0d.txt", j);
-	$sformat(output_file_name, "output_%0d.txt", j);
+	$sformat(input_file_name, "input%0d.txt", j);
+	$sformat(output_file_name, "output%0d.txt", j);
 	  for (i=0; i<=63; i=i+1)
     		mem[i] = 25'b0;
   	  $readmemb (input_file_name, mem);
@@ -50,7 +50,7 @@ module testbench_2();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(3*3882) start = 0;
+        #(2*84350) start = 0;
         $finish;
     end
 
