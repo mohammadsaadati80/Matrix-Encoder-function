@@ -1,4 +1,4 @@
-module controller (
+module controller_2(
 	cnt24_en, cnt64_en, cnt24_rst, cnt64_rst , read_en, wr_en, rotate_en, cnt24_co, cnt64_co, clk, rst, done, file_write
 );
 

@@ -1,25 +1,33 @@
-module rotate (mem, cnt24_value, cnt64_value, wr_en, table_value, slice);
+module datapath_2 (clk, rst, wr_en, inreg_en, cnt_en_64, cnt_en_25, 
+				cnt_co_25, cnt_co_64, cnt_value, mem_line, write_value, cnt_rst_64, cnt_rst_25, mem_out);
+	
+	input clk;
+	input rst;
+	input wr_en;
+	input inreg_en;
+	input cnt_en_25;
+    input cnt_en_64;
+	input [24:0] mem_line;
+	input cnt_rst_25;
+    input cnt_rst_64;
+    input [24:0] mem_out [0:63];
+	output cnt_co_64;
+    output cnt_co_25;
+	output [5:0] cnt_value;
+	output [24:0] write_value;
+	
+	wire [5:0] cnt_64_value;
+    wire [4:0] cnt_25_value;
+	wire [24:0] col_parity_out;
+	wire [24:0] reg_out;
 
-    input [24:0] slice;
-    input [6:0] cnt64_value;
-    input [5:0] cnt24_value;
-    input wr_en;
-    inout [24:0] mem [63:0];  
+	assign cnt_value = cnt_64_value;
+	assign write_value = col_parity_out;
 
-    integer i = 0;
-    integer x = 0;
-    integer y = 0;
-    integer new_z = 0;
-
-    always @(wr_en) begin
-        if (swap_en) begin
-                x = i % 5;
-                y = i / 5;
-                x = (x + 3) % 5;
-                y = (y + 3) % 5;
-                new_z = cnt64_value + table_value[x][y];  //tartib doroste?
-                mem[cnt24_co][new_z] = slice[cnt24_co];              //tartib doroste?
-        end
-    end
+	counter #(6) cnt64(.clk(clk), .en(cnt_en_64), .pin(cnt_64_value), .pout(cnt_64_value), .rst(cnt_rst_64), .co(cnt_co_64), .rst_value(6'b000000), .select(1'b1), .ld(1'b0));
+    counter #(5) cnt25(.clk(clk), .en(cnt_en_25), .pin(cnt_25_value), .pout(cnt_25_value), .rst(cnt_rst_25), .co(cnt_co_25), .rst_value(5'b00111), .select(1'b1), .ld(1'b0));
+	register reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
+	rotate  rotate1(.mem(mem_out), .cnt24_value(cnt_25_value), .cnt64_value(cnt_64_value), .wr_en(wr_en), .slice(mem_line));
 
 endmodule
+

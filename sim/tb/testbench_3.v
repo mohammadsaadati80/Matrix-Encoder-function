@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module testbench();
+module testbench_3();
 
     reg clk = 0, rst = 0, start = 0;
     wire done;
@@ -10,17 +10,17 @@ module testbench();
     wire [24:0] wr_val;
 
     integer i;
-    integer j = 0;
+    integer j = 9;
     reg [12*8:1] input_file_name;
     reg [13*8:1] output_file_name;
     integer f;
 
     reg [24:0] mem [0:63];
 
-    colParity_func uut(.clk(clk), .rst(rst), .start(start),
+    permutation_func uut(.clk(clk), .rst(rst), .start(start), .input_file_name(input_file_name), .output_file_name(output_file_name),
 	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val));
 
-    assign line_in = mem[(cnt_value+1)%64];
+    assign line_in = mem[cnt_value - 7'b0111111];
 
     always @(posedge wr_en) begin
 	f = $fopen(output_file_name,"a");
@@ -30,10 +30,10 @@ module testbench();
     
     always @(posedge done) begin
 	    j = j + 1;
-        $sformat(input_file_name, "input_%0d.txt", j);
+        $sformat(input_file_name, "%0d.in", j);
         $sformat(output_file_name, "output_%0d.txt", j);
 	    $readmemb (input_file_name, mem);
-	    start = 0;
+	start = 0;
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
@@ -41,8 +41,10 @@ module testbench();
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "input_%0d.txt", j);
+	$sformat(input_file_name, "%0d.in", j);
 	$sformat(output_file_name, "output_%0d.txt", j);
+        // $sformat(input_file_name, "input_%0d.txt", i);
+        // $sformat(output_file_name, "output_%0d.txt", i);
 	  for (i=0; i<=63; i=i+1)
     		mem[i] = 25'b0;
   	  $readmemb (input_file_name, mem);
@@ -50,7 +52,16 @@ module testbench();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(3*3882) start = 0;
+        // while (i < 3) begin
+        //     if (done) begin
+        //         #23 rst = 1;
+        //         i = i + 1;
+        //         $sformat(input_file_name, "input_%0d.txt", i);
+        //         $sformat(output_file_name, "output_%0d.txt", i);
+        //         #23 rst = 0;
+        //     end
+        // end
+        #(4*7750) start = 0;
         $finish;
     end
 

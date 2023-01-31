@@ -4,19 +4,19 @@
 	exec vlib work
 	vmap work work
 	
-	set TB					"testbench"
+	set TB					"testbench_1"
 	set hdl_path			"../src/hdl"
 	
 	set run_time			"-all"
 
 #============================ Add verilog files  ===============================
 # Pleas add other module here	
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/colParity_func.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/requirements.v
-	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/controller.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/datapath.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/read_from_file.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/colParity/colParity_func.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity/requirements.v
+	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/colParity/controller.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity/datapath.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity/colParity.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/colParity/read_from_file.v
 	vlog 	+acc -incr -source  +define+SIM 	./tb/$TB.v
 		
 #	onerror {break}
