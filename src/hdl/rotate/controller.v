@@ -1,5 +1,5 @@
 module controller_2(
-	cnt24_en, cnt64_en, cnt24_rst, cnt64_rst , read_en, wr_en, rotate_en, cnt24_co, cnt64_co, clk, rst, done, file_write
+	cnt24_en, cnt64_en, cnt24_rst, cnt64_rst , read_en, wr_en_1, wr_en_2, rotate_en, cnt24_co, cnt64_co, clk, rst, done, file_write
 );
 
 	input rotate_en;
@@ -12,7 +12,8 @@ module controller_2(
     output reg cnt24_en; 
 	output reg cnt64_rst; 
     output reg cnt24_rst; 
-	output reg wr_en;
+	output reg wr_en_1;
+	output reg wr_en_2;
 	output reg done;
     output reg file_write;
 
@@ -50,7 +51,7 @@ module controller_2(
 	end
 
 	always@(ps , cnt24_co, cnt64_co) begin
-		read_en = 1'b0 ; cnt24_en = 1'b0 ; cnt64_en = 1'b0 ; cnt24_rst = 1'b0; cnt64_rst = 1'b0; wr_en = 1'b0; done = 1'b0; file_write= 1'b0;
+		read_en = 1'b0 ; cnt24_en = 1'b0 ; cnt64_en = 1'b0 ; cnt24_rst = 1'b0; cnt64_rst = 1'b0; wr_en_1 = 1'b0; wr_en_2 = 1'b0; done = 1'b0; file_write= 1'b0;
 		case (ps)
 		Idle: begin
 			cnt64_rst = 1'b1;
@@ -60,10 +61,11 @@ module controller_2(
 			read_en = 1'b1;
 		end
 		Write : begin
-			wr_en = 1'b1;
+			wr_en_1 = 1'b1;
 		end
 		Cnt24_Up : begin
 			cnt24_en = 1'b1;
+			wr_en_2 = 1'b1;
 		end
 		Cnt64_Up : begin
 			cnt64_en = 1'b1;

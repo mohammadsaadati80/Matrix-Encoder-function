@@ -1,9 +1,10 @@
-module rotate (mem, cnt24_value, cnt64_value, wr_en, slice);
+module rotate (mem, cnt24_value, cnt64_value, wr_en_1, wr_en_2, slice);
 
     input [24:0] slice;
     input [5:0] cnt64_value;
     input [4:0] cnt24_value;
-    input wr_en;
+    input wr_en_1;
+    input wr_en_2;
     output reg [24:0] mem [63:0];  
 
     // reg [24:0] temp [63:0];
@@ -13,17 +14,26 @@ module rotate (mem, cnt24_value, cnt64_value, wr_en, slice);
     integer y = 0;
     integer new_z = 0;
     integer xy = 0;
+    integer cv = 0;
+    integer xy_ = 0;
     
     integer table_value;
 
-    always @(wr_en) begin
-        if (1) begin //TODO swap_en
-                x = cnt24_value % 5;
-                y = cnt24_value / 5;
+    always @(wr_en_1, wr_en_2) begin
+        if (wr_en_1) begin
+            cv = (cnt24_value+25) % 32;
+                x = (cv) % 5;
+                y = (cv) / 5;
                 x = (x + 3) % 5;
                 y = (y + 3) % 5;
-                new_z = cnt64_value + table_value;  //tartib doroste?
-                xy = ((x + 2) % 5) + 5*((y + 2) % 5);
+                  //tartib doroste?
+                xy = (((x + 2) % 5) + 5*((y + 2) % 5) % 25);
+                // xy_ = (xy + 24) %25;
+
+        end
+        
+        if (wr_en_2) begin //TODO swap_en
+                
                 mem[new_z][xy] = slice[xy];              //tartib doroste?
         end
     end
@@ -31,7 +41,7 @@ module rotate (mem, cnt24_value, cnt64_value, wr_en, slice);
     // assign mem = temp;
 
     reg [7:0] ii;
-    assign ii = x + 5*y;
+    assign ii = (x + 5*y) % 25;
 
     always @(*) begin
         case(ii) 
@@ -61,6 +71,7 @@ module rotate (mem, cnt24_value, cnt64_value, wr_en, slice);
             8'd23: table_value = 8'd56;
             8'd24: table_value = 8'd14;
         endcase
+        new_z = (cnt64_value + table_value) % 64;
     end
 
 endmodule
