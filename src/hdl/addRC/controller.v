@@ -1,4 +1,4 @@
-module controller (
+module controller_5 (
 	cnt64_en, cnt64_rst , read_en, xor_en, addrc_en, cnt64_co, clk, rst, done, file_write
 );
 

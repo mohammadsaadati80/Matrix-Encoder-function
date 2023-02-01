@@ -1,4 +1,4 @@
-module controller (
+module controller_1 (
 	inreg_en, cnt_en, cnt_rst, wr_en, start, cnt_co, clk, rst, done
 );
 

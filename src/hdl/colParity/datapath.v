@@ -1,4 +1,4 @@
-module datapath (clk, rst, wr_en, inreg_en, cnt_en, 
+module datapath_1 (clk, rst, wr_en, inreg_en, cnt_en, 
 				cnt_co, cnt_value, mem_line, write_value, cnt_rst);
 	
 	input clk;

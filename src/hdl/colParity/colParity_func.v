@@ -21,10 +21,10 @@ module colParity_func (clk, rst, start, donee, cnt_value, line_in, write_enable,
 	assign write_enable = write_en;
 	assign write_value = write_val;
 
-	controller cntrl( .start(start), .cnt_co(counter_64_co), .rst(rst), .clk(clk), .wr_en(write_en),
+	controller_1 cntrl( .start(start), .cnt_co(counter_64_co), .rst(rst), .clk(clk), .wr_en(write_en),
 	.inreg_en(reg_en), .cnt_en(cnt_64_en), .done(done), .cnt_rst(cnt_rst) );
 
-	datapath dp(.clk(clk), .rst(rst), .wr_en(write_en), .inreg_en(reg_en), .cnt_en(cnt_64_en),  
+	datapath_1 dp(.clk(clk), .rst(rst), .wr_en(write_en), .inreg_en(reg_en), .cnt_en(cnt_64_en),  
 			.cnt_co(counter_64_co), .cnt_value(cnt_value), .mem_line(line_in), .write_value(write_val), .cnt_rst(rst));
 
 

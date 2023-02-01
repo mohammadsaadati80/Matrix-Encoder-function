@@ -1,4 +1,4 @@
-module addRC_Top (clk, rst, addrc_en, donee, cnt_value, line_in, write_enable, write_value);
+module addRC_Top (clk, rst, addrc_en, donee, cnt_value, line_in, write_enable, write_value, data_out);
 
 	input clk;
 	input rst;
@@ -8,6 +8,7 @@ module addRC_Top (clk, rst, addrc_en, donee, cnt_value, line_in, write_enable, w
 	output reg write_enable;
 	output [5:0] cnt_value;
 	output [24:0] write_value;
+	output reg [24:0] data_out [0:63];
 
 	wire counter_64_co;
 	wire xor_enable;
@@ -25,12 +26,12 @@ module addRC_Top (clk, rst, addrc_en, donee, cnt_value, line_in, write_enable, w
 	assign write_enable = xor_enable;
 	assign write_value = write_val;
 
-    controller cntrl( .cnt64_en(cnt_64_en), .cnt64_rst(cnt_rst_64) , .read_en(read_en), .xor_en(xor_enable),
+    controller_5 cntrl( .cnt64_en(cnt_64_en), .cnt64_rst(cnt_rst_64) , .read_en(read_en), .xor_en(xor_enable),
         .addrc_en(addrc_en), .cnt64_co(counter_64_co), .rst(rst), .clk(clk), .done(done), .file_write(file_write));
 
-    datapath dp(.clk(clk), .rst(rst), .xor_en(xor_enable), .inreg_en(reg_en),
+    datapath_5 dp(.clk(clk), .rst(rst), .xor_en(xor_enable), .inreg_en(reg_en),
                 .cnt_en_64(cnt_64_en), .cnt_co_64(counter_64_co), .cnt_value(cnt_value), 
-                .mem_line(line_in), .write_value(write_val), .cnt_rst_64(cnt_rst_64), .mem_out(mem_out));
+                .mem_line(line_in), .write_value(write_val), .cnt_rst_64(cnt_rst_64), .mem_out(mem_out), .data_out(data_out));
 
 
 endmodule

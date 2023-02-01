@@ -1,4 +1,4 @@
-module rotate_top (clk, rst, rotate_en, donee, cnt_value, line_in, write_enable, write_value);
+module rotate_top (clk, rst, rotate_en, donee, cnt_value, line_in, write_enable, write_value, data_out);
 
 	input clk;
 	input rst;
@@ -8,6 +8,7 @@ module rotate_top (clk, rst, rotate_en, donee, cnt_value, line_in, write_enable,
 	output reg write_enable;
 	output [5:0] cnt_value;
 	output [24:0] write_value;
+	output reg [24:0] data_out [0:63];
 
 	wire counter_64_co;
     wire counter_25_co;
@@ -20,7 +21,7 @@ module rotate_top (clk, rst, rotate_en, donee, cnt_value, line_in, write_enable,
 	wire [24:0] write_val;
 	wire cnt_rst_64;
     wire cnt_rst_25;
-    wire [24:0] mem_out [0:63];
+    reg [24:0] mem_out [0:63];
     
     wire read_en; //TODO
     wire file_write; //TODO
@@ -29,6 +30,7 @@ module rotate_top (clk, rst, rotate_en, donee, cnt_value, line_in, write_enable,
 	assign write_enable = write_en_2;
 	assign write_value = write_val;
 
+	assign data_out = mem_out;
 
     controller_2 cntrl(.cnt24_en(cnt_en_25), .cnt64_en(cnt_en_64), .cnt24_rst(cnt_rst_25), .cnt64_rst(cnt_rst_64) , .read_en(read_en), .wr_en_1(write_en_1), .wr_en_2(write_en_2), 
         .rotate_en(rotate_en), .cnt24_co(counter_25_co), .cnt64_co(counter_64_co), .rst(rst), .clk(clk), .done(done), .file_write(file_write));

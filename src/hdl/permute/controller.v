@@ -1,4 +1,4 @@
-module controller (
+module controller_3 (
 	start, counter_64_co, rst, clk, write_en , read_en, mux_en,
 	reg_en , cnt_64_en, done, reg_rst, permute_en
 );

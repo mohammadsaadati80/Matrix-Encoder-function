@@ -26,10 +26,10 @@ module permutation_func (clk, rst, start, input_file_name, output_file_name, don
 	assign write_enable = write_en;
 	assign write_value = write_val;
 
-	controller cntrl( .start(start), .counter_64_co(counter_64_co), .rst(rst), .clk(clk), .write_en(write_en), .read_en(read_en), .mux_en(mux_en),
+	controller_3 cntrl( .start(start), .counter_64_co(counter_64_co), .rst(rst), .clk(clk), .write_en(write_en), .read_en(read_en), .mux_en(mux_en),
 	.reg_en(reg_en), .cnt_64_en(cnt_64_en), .done(done), .reg_rst(reg_rst), .permute_en(permute_en) );
 
-	datapath dp(.clk(clk), .rst(rst), .input_file_name(input_file_name), .write_en(write_en), .read_en(read_en), .reg_en(reg_en), .cnt_64_en(cnt_64_en), 
+	datapath_3 dp(.clk(clk), .rst(rst), .input_file_name(input_file_name), .write_en(write_en), .read_en(read_en), .reg_en(reg_en), .cnt_64_en(cnt_64_en), 
 			.mux_en(mux_en),	.reg_rst(reg_rst), .output_file_name(output_file_name), .permute_en(permute_en), 
 			.counter_co(counter_64_co), .cnt_value(cnt_value), .line_in(line_in), .write_value(write_val));
 

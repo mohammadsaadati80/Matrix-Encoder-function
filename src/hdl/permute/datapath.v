@@ -1,4 +1,4 @@
-module datapath (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, cnt_64_en, 
+module datapath_3 (clk, rst, input_file_name, write_en, read_en, mux_en, reg_en, cnt_64_en, 
 				reg_rst, output_file_name, permute_en, counter_co, cnt_value, line_in, write_value);
 	
 	input clk;
