@@ -28,13 +28,13 @@ module rotate (mem, cnt24_value, cnt64_value, wr_en_1, wr_en_2, slice);
                 y = (y + 3) % 5;
                   //tartib doroste?
                 xy = (((x + 2) % 5) + 5*((y + 2) % 5) % 25);
-                // xy_ = (xy + 24) %25;
+                xy_ = (24 - xy) %25;
 
         end
         
         if (wr_en_2) begin //TODO swap_en
                 
-                mem[new_z][xy] = slice[xy];              //tartib doroste?
+                mem[new_z][xy] = slice[xy_];              //tartib doroste?
         end
     end
 

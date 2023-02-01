@@ -50,7 +50,7 @@ module testbench_2();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(2*84350) start = 0;
+        #(2*84270) start = 0;
         $finish;
     end
 
