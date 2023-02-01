@@ -34,7 +34,7 @@ module rotate (mem, cnt24_value, cnt64_value, wr_en_1, wr_en_2, slice);
         
         if (wr_en_2) begin //TODO swap_en
                 
-                mem[new_z][xy] = slice[xy_];              //tartib doroste?
+                mem[new_z][xy_] = slice[xy_];              //tartib doroste?
         end
     end
 

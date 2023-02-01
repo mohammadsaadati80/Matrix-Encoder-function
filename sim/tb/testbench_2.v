@@ -16,16 +16,21 @@ module testbench_2();
     integer f;
 
     reg [24:0] mem [0:63];
+    wire[24:0] data_out [0:63];
 
     rotate_top uut(.clk(clk), .rst(rst), .rotate_en(start),
-	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val));
+	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val), .data_out(data_out));
 
     assign line_in = mem[(cnt_value)%64];
 
-    always @(posedge wr_en) begin
-	f = $fopen(output_file_name,"a");
-	$fwrite(f,"%b",wr_val);
-	$fwrite(f,"\n");
+    always @(*) begin
+        if (start == 0) begin
+            for (i=0; i<=63; i=i+1) begin
+                f = $fopen(output_file_name,"a");
+	            $fwrite(f,"%b",data_out[i]);
+	            $fwrite(f,"\n");
+        end
+        end
     end
     
     always @(posedge done) begin

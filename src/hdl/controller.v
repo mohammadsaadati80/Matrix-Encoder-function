@@ -1,11 +1,17 @@
 module controller (
-	cnt_en, cnt_rst, start, cnt_co, clk, rst, done, wr_en, colParity_en, rotate_en, permute_en, revalute_en, addRC_en
+	cnt_en, cnt_rst, start, cnt_co, clk, rst, done, wr_en, colParity_en, rotate_en, permute_en, revalute_en, addRC_en,
+	done1, done2, done3, done4, done5
 );
 
 	input start;
 	input cnt_co;
 	input rst;
 	input clk;
+	input done1;
+	input done2;
+	input done3;
+	input done4;
+	input done5;
 	output reg cnt_en; 
 	output reg cnt_rst; 
 	output reg wr_en;
@@ -28,21 +34,21 @@ module controller (
 			ps <= ns;
 	end
 
-	always@(ps, start, cnt_co) begin
+	always@(ps, start, cnt_co, done1, done2, done3, done4, done5) begin
 		ns = Idle ;
 		case (ps)
 			Idle:
 				ns = (start) ? ColParity : Idle;
 			ColParity:
-				ns = Rotate;
+				ns = done1 ? Rotate : ColParity;
 			Rotate:
-				ns = Permute;
+				ns = done2 ? Permute : Rotate;
 			Permute:
-				ns = Revalute;
+				ns = done3 ? Revaluate : Permute;
 			Revalute:
-				ns = AddRC;
+				ns = done4 ? AddRC : Revalute;
 			AddRC:
-				ns = Count24_Up;
+				ns = done5 ? Count24_Up : AddRC;
 			Count24_Up:
 				ns = (cnt_co) ? Idle : ColParity;
 			default :

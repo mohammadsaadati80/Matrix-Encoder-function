@@ -30,7 +30,7 @@ module testbench_3();
     
     always @(posedge done) begin
 	    j = j + 1;
-        $sformat(input_file_name, "%0d.in", j);
+        $sformat(input_file_name, "%0d.txt", j);
         $sformat(output_file_name, "output_%0d.txt", j);
 	    $readmemb (input_file_name, mem);
 	start = 0;
@@ -41,7 +41,7 @@ module testbench_3();
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "%0d.in", j);
+	$sformat(input_file_name, "%0d.txt", j);
 	$sformat(output_file_name, "output_%0d.txt", j);
         // $sformat(input_file_name, "input_%0d.txt", i);
         // $sformat(output_file_name, "output_%0d.txt", i);

@@ -1,4 +1,4 @@
-module register (clk,pin,en,rst,pout);
+module register_3 (clk,pin,en,rst,pout);
     
     parameter N = 25;
     input clk;
@@ -14,7 +14,7 @@ module register (clk,pin,en,rst,pout);
 
 endmodule
 
-module counter (clk,pin,select,ld,rst,en,pout,co);
+module counter_3 (clk,pin,select,ld,rst,en,pout,co);
     
     parameter N = 8;
     input clk;
@@ -41,7 +41,7 @@ module counter (clk,pin,select,ld,rst,en,pout,co);
 
 endmodule
 
-module write_to_file ( output_file_name, en, line);
+module write_to_file_3 ( output_file_name, en, line);
 
     // input string output_file_name;
     input [13*8-1:0] output_file_name; // Can store 13 characters
@@ -64,7 +64,7 @@ module write_to_file ( output_file_name, en, line);
 
 endmodule
 
-module mux2to1 (a,b,s,w);
+module mux2to1_3 (a,b,s,w);
 
     parameter N = 25;
     input [N-1:0]a;

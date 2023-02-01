@@ -30,13 +30,13 @@ module datapath_2 (clk, rst, wr_en_1, wr_en_2, inreg_en, cnt_en_64, cnt_en_25,
 	integer i = 0;
 	always @(*) begin
 		for(i = 0; i < 64; i = i + 1) begin 
-			data_out[i] = mem_out[i];
+			data_out[i] = mem_out[63-i];
         end
 	end
 
-	counter #(6) cnt64(.clk(clk), .en(cnt_en_64), .pin(cnt_64_value), .pout(cnt_64_value), .rst(cnt_rst_64), .co(cnt_co_64), .rst_value(6'b000000), .select(1'b1), .ld(1'b0));
-    counter #(5) cnt25(.clk(clk), .en(cnt_en_25), .pin(cnt_25_value), .pout(cnt_25_value), .rst(cnt_rst_25), .co(cnt_co_25), .rst_value(5'b00111), .select(1'b1), .ld(1'b0));
-	register reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
+	counter_2 #(6) cnt64(.clk(clk), .en(cnt_en_64), .pin(cnt_64_value), .pout(cnt_64_value), .rst(cnt_rst_64), .co(cnt_co_64), .rst_value(6'b000000), .select(1'b1), .ld(1'b0));
+    counter_2 #(5) cnt25(.clk(clk), .en(cnt_en_25), .pin(cnt_25_value), .pout(cnt_25_value), .rst(cnt_rst_25), .co(cnt_co_25), .rst_value(5'b00111), .select(1'b1), .ld(1'b0));
+	register_2 reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
 	rotate  rotate1(.mem(mem_out), .cnt24_value(cnt_25_value), .cnt64_value(cnt_64_value), .wr_en_1(wr_en_1), .wr_en_2(wr_en_2), .slice(mem_line));
 
 endmodule

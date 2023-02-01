@@ -10,28 +10,33 @@ module testbench();
     wire [24:0] wr_val;
 
     integer i;
-    integer j = 1;
+    integer j = 0;
     reg [12*8:1] input_file_name;
     reg [13*8:1] output_file_name;
     integer f;
 
     reg [24:0] mem [0:63];
+    wire[24:0] data_out [0:63];
 
-    encoder_top uut(.clk(clk), .rst(rst), .rotate_en(start),
-	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val));
+    encoder_top uut(.clk(clk), .rst(rst), .start(start),
+	 .donee(done), .cnt_value(cnt_value), .line_in(line_in), .write_enable(wr_en), .write_value(wr_val), .data_out(data_out));
 
-    assign line_in = mem[(cnt_value)%64];
+    assign line_in = mem[(cnt_value+1)%64];
 
-    always @(posedge wr_en) begin
-	f = $fopen(output_file_name,"a");
-	$fwrite(f,"%b",wr_val);
-	$fwrite(f,"\n");
+    always @(negedge done) begin
+        // if (done) begin
+            for (i=0; i<=63; i=i+1) begin
+                f = $fopen(output_file_name,"a");
+	            $fwrite(f,"%b",data_out[i]);
+	            $fwrite(f,"\n");
+        // end
+        end
     end
     
     always @(posedge done) begin
 	    j = j + 1;
-        $sformat(input_file_name, "input%0d.txt", j);
-        $sformat(output_file_name, "output%0d.txt", j);
+        $sformat(input_file_name, "input_%0d.txt", j);
+        $sformat(output_file_name, "output_%0d.txt", j-1);
 	    $readmemb (input_file_name, mem);
 	    start = 0;
         rst = 1;
@@ -41,8 +46,8 @@ module testbench();
 
     always #10 clk = ~clk;
     initial begin
-	$sformat(input_file_name, "input%0d.txt", j);
-	$sformat(output_file_name, "output%0d.txt", j);
+	$sformat(input_file_name, "input_%0d.txt", j);
+	$sformat(output_file_name, "output_%0d.txt", j-1);
 	  for (i=0; i<=63; i=i+1)
     		mem[i] = 25'b0;
   	  $readmemb (input_file_name, mem);

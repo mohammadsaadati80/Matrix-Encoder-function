@@ -1,4 +1,4 @@
-module register (clk,pin,en,rst,pout);
+module register_1 (clk,pin,en,rst,pout);
     
     parameter N = 25;
     input clk;
@@ -14,7 +14,7 @@ module register (clk,pin,en,rst,pout);
 
 endmodule
 
-module counter (clk,pin,select,ld,rst,en,pout,co);
+module counter_1 (clk,pin,select,ld,rst,en,pout,co);
     
     parameter N = 8;
     input clk;

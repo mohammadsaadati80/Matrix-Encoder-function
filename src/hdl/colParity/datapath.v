@@ -19,8 +19,8 @@ module datapath_1 (clk, rst, wr_en, inreg_en, cnt_en,
 	assign cnt_value = cnt_64_value;
 	assign write_value = col_parity_out;
 
-	counter #(7) cnt1(.clk(clk), .en(cnt_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(cnt_rst), .ld(1'b0), .co(cnt_co));
-	register reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
+	counter_1 #(7) cnt1(.clk(clk), .en(cnt_en), .pin(cnt_64_value), .pout(cnt_64_value), .select(1'b1), .rst(cnt_rst), .ld(1'b0), .co(cnt_co));
+	register_1 reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
 	colParity colParity1(.input1(reg_out), .input2(mem_line), .output_line(col_parity_out));
 
 endmodule
