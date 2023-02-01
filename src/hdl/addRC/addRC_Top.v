@@ -8,7 +8,7 @@ module addRC_Top (clk, rst, addrc_en, donee, cnt_value, line_in, write_enable, w
 	output reg write_enable;
 	output [5:0] cnt_value;
 	output [24:0] write_value;
-	output reg [24:0] data_out [0:63];
+	output [24:0] data_out [0:63];
 
 	wire counter_64_co;
 	wire xor_enable;
