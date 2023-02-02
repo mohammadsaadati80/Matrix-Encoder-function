@@ -1,6 +1,6 @@
 `include "ISA.v"
 
-module Counter #(parameter WORD_LENGTH = `LEN_COUNTER_DATA) (
+module Counter_4 #(parameter WORD_LENGTH = `LEN_COUNTER_DATA) (
     input clk,
     input rst,
     input en,
@@ -13,7 +13,7 @@ module Counter #(parameter WORD_LENGTH = `LEN_COUNTER_DATA) (
     assign out = (pre + en) % max;
     assign overflow = ((pre == max - 1) & (en));
 
-	Register #(.WORD_LENGTH(WORD_LENGTH)) counter_register(
+	Register_4 #(.WORD_LENGTH(WORD_LENGTH)) counter_register(
 		.clk(clk),
         .rst(rst),
 		.ld(en),

@@ -17,3 +17,21 @@
 
 `define LEN_STATE 2
 `define LEN_ADDRESS 11
+
+module Register_4 (clk,in,ld,rst,out);
+    
+    parameter WORD_LENGTH = 25;
+    input clk;
+    input ld;
+    input rst;
+    input [WORD_LENGTH-1:0]in;
+    output reg [WORD_LENGTH-1:0]out;
+
+    always @(posedge clk) begin
+        if(rst) out <= 0;
+        else if(ld) out <= in;
+    end
+
+endmodule
+
+

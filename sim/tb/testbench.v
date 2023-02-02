@@ -55,7 +55,7 @@ module testbench();
         rst = 1;
         #23 rst = 0;
         #33 start = 1;
-        #(2*84270) start = 0;
+        #(1*24*137000) start = 0;
         $finish;
     end
 

@@ -39,7 +39,7 @@ module encoder_top (clk, rst, start, donee, cnt_value, line_in, write_enable, wr
 	datapath dp(.clk(clk), .rst(rst), .wr_en(write_en), .inreg_en(reg_en), .cnt_en_24(cnt_24_en), .cnt_co_24(counter_24_co), .cnt_value(cnt_value), 
 	.mem_line(line_in), .write_value(write_val), .cnt_rst_24(rst),
 	.colParity_en(colParity_en), .rotate_en(rotate_en), .permute_en(permute_en),
-	 .revalute_en(revalute_en), .addRC_en(addRC_en),
+	 .revaluate_en(revalute_en), .addRC_en(addRC_en),
 	 .done1(done1), .done2(done2), .done3(done3), .done4(done4), .done5(done5), .data_out(data_out));
 
 

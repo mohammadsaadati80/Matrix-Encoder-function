@@ -1,6 +1,6 @@
 `include "ISA.v"
 
-module Controller(
+module Controller_4(
     input clk,
     input rst,
     input start,

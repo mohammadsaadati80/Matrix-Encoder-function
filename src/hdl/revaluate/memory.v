@@ -1,7 +1,7 @@
 
 `include "ISA.v"
 
-module Memory(
+module Memory_4(
 	input clk,
 	input rst,
 

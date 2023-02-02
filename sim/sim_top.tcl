@@ -31,6 +31,14 @@
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/permute/swap.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/permute/read_from_file.v
 
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/controller.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/counter.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/ISA.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/memory.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/MUX3Dto1.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/revaluate_dp.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/revaluate/revaluate.v
+
     vlog 	+acc -incr -source  +define+SIM 	$hdl_path/addRC/addRC_Top.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/addRC/requirements.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/addRC/controller.v

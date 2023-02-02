@@ -1,6 +1,6 @@
 `include "ISA.v"
 
-module RevaluateDP(
+module RevaluateDP_4(
     input clk,
     input rst,
     input [`NUM_CELLS - 1:0] data_in,
@@ -13,7 +13,7 @@ module RevaluateDP(
 );
     wire [2:0] i;
     wire i_overflow;
-    Counter #(.WORD_LENGTH(3)) i_counter(
+    Counter_4 #(.WORD_LENGTH(3)) i_counter(
         .clk(clk),
         .rst(rst),
         .en(count),
@@ -25,7 +25,7 @@ module RevaluateDP(
 
     wire [2:0] j;
     wire j_overflow;
-    Counter #(.WORD_LENGTH(3)) j_counter(
+    Counter_4 #(.WORD_LENGTH(3)) j_counter(
         .clk(clk),
         .rst(rst),
         .en(i_overflow),
@@ -36,7 +36,7 @@ module RevaluateDP(
     );
 
     wire [5:0] k;
-    Counter #(.WORD_LENGTH(7)) k_counter(
+    Counter_4 #(.WORD_LENGTH(7)) k_counter(
         .clk(clk),
         .rst(rst),
         .en(j_overflow),
@@ -47,7 +47,7 @@ module RevaluateDP(
     );
 
     wire current_cell, next_cell, next_next_cell;
-    MUX3Dto1 cell_mux(
+    MUX3Dto1_4 cell_mux(
         .mat(data_in),
         .i(i),
         .j(j),
@@ -57,7 +57,7 @@ module RevaluateDP(
     );
 
     wire [2:0] ii = (i + 1) % `NUM_ROW;
-    MUX3Dto1 next_cell_mux(
+    MUX3Dto1_4 next_cell_mux(
         .mat(data_in),
         .i(ii),
         .j(j),
@@ -67,7 +67,7 @@ module RevaluateDP(
     );
 
     wire [2:0] iii = (i + 2) % `NUM_ROW;
-    MUX3Dto1 next_next_cell_mux(
+    MUX3Dto1_4 next_next_cell_mux(
         .mat(data_in),
         .i(iii),
         .j(j),
@@ -77,7 +77,7 @@ module RevaluateDP(
     );
 
     wire [`LEN_ADDRESS - 1:0] address_in = k * `NUM_ROW * `NUM_COLUMN + j * `NUM_ROW + i;
-    Memory memory(
+    Memory_4 memory(
         .clk(clk),
         .rst(rst),
         .mem_write(write),

@@ -25,7 +25,7 @@ module controller (
 	assign done = cnt_co;
 
 	reg [2:0] ps , ns ;
-	parameter [2:0] Idle = 0 , ColParity = 1 , Rotate = 2 , Permute = 3, Revalute = 4, AddRC = 5, Count24_Up = 6;
+	parameter [2:0] Idle = 0 , ColParity = 1 , Rotate = 2 , Permute = 3, Revaluate = 4, AddRC = 5, Count24_Up = 6;
 
 	always@(posedge clk , posedge rst) begin
 		if (rst == 1'b1)
@@ -45,8 +45,8 @@ module controller (
 				ns = done2 ? Permute : Rotate;
 			Permute:
 				ns = done3 ? Revaluate : Permute;
-			Revalute:
-				ns = done4 ? AddRC : Revalute;
+			Revaluate:
+				ns = done4 ? AddRC : Revaluate;
 			AddRC:
 				ns = done5 ? Count24_Up : AddRC;
 			Count24_Up:
@@ -71,7 +71,7 @@ module controller (
 		Permute : begin
 			permute_en = 1'b1;
 		end
-		Revalute : begin
+		Revaluate : begin
 			revalute_en = 1'b1;
 		end
 		AddRC : begin

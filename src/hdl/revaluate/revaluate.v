@@ -12,7 +12,7 @@ module Revaluate(
 );
     wire controller_reset_signal, controller_write_signal, controller_count_signal;
     wire datapath_done_signal;
-    RevaluateDP revaluate(
+    RevaluateDP_4 revaluate(
         .clk(clk),
         .rst(controller_reset_signal),
         .data_in(data_in),
@@ -23,7 +23,7 @@ module Revaluate(
         .done(datapath_done_signal),
         .data_out(data_out)
     );
-    Controller controller(
+    Controller_4 controller(
         .clk(clk),
         .rst(rst),
         .start(start),
