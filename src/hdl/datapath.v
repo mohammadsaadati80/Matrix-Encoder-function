@@ -77,24 +77,27 @@ module datapath (clk, rst, wr_en, inreg_en, cnt_en_24,
 	always @(*) begin
 		if (colParity_en) begin
 			colParity_i = (cnt_value1+1)%64;
-			mem_out_1[colParity_i] <= write_value1; 
 		end
 		if (permute_en) begin
 			permute_i = cnt_value3 - 7'b0111111;
-			mem_out_3[permute_i] <= write_value3;
 		end
 		if (addRC_en)
-			addRC_i = cnt_24_value - 5'b01000;
-		if (revaluate_en) begin
-			
-		end
+			addRC_i = cnt_24_value - 5'b00111;
+	end
+
+	always @(write_enable1) begin
+		mem_out_1[colParity_i] <= write_value1;
+	end
+
+	always @(write_enable3) begin
+		mem_out_3[permute_i] <= write_value3;
 	end
 
 	always @(revaluate_en) begin
 		for (i = 0; i < 64; i = i + 1) begin
 				for (j = 0; j < 25; j = j + 1) begin
 					revaluate_i = (j + i*25);
-					datain[revaluate_i] <= mem_out_3[i][j];
+					datain[revaluate_i] <= mem_out_3[i][24-j];
 				end
 			end
 	end
@@ -103,7 +106,7 @@ module datapath (clk, rst, wr_en, inreg_en, cnt_en_24,
 		for (i = 0; i < 64; i = i + 1) begin
 				for (j = 0; j < 25; j = j + 1) begin
 					revaluate_i = (j + i*25);
-					mem_out_4[i][j] <= dataout[revaluate_i];
+					mem_out_4[i][24-j] <= dataout[revaluate_i];
 				end
 			end
 	end
@@ -114,23 +117,23 @@ module datapath (clk, rst, wr_en, inreg_en, cnt_en_24,
         end
 	end
 
-	assign line_in1 = (cnt_24_value == 5'b01000) ? mem_line : mem_out_5[colParity_i]; 
+	assign line_in1 = (cnt_24_value == 5'b00111) ? mem_line : mem_out_5[colParity_i]; 
 	assign line_in2 = mem_out_1[cnt_value2];
 	assign line_in3 = mem_out_2[permute_i];
 	assign line_in4 = mem_out_3[cnt_value4];
 	assign line_in5 = mem_out_4[cnt_value5];
 
-    counter_5 #(5) cnt24(.clk(clk), .en(cnt_en_24), .pin(cnt_24_value), .pout(cnt_24_value), .rst(cnt_rst_24), .co(cnt_co_24), .rst_value(5'b01000), .select(1'b1), .ld(1'b0));
+    counter_5 #(5) cnt24(.clk(clk), .en(cnt_en_24), .pin(cnt_24_value), .pout(cnt_24_value), .rst(cnt_rst_24), .co(cnt_co_24), .rst_value(5'b00111), .select(1'b1), .ld(1'b0));
 	register reg1(.clk(clk), .pin(mem_line), .en(inreg_en), .rst(rst), .pout(reg_out));
 
-	colParity_func colParity1(.clk(clk), .rst(rst), .start(colParity_en), .donee(done1), .cnt_value(cnt_value1), .line_in(line_in1),
+	colParity_func colParity1(.clk(clk), .rst(rst || cnt_en_24), .start(colParity_en), .donee(done1), .cnt_value(cnt_value1), .line_in(line_in1),
 							 .write_enable(write_enable1), .write_value(write_value1));
-	rotate_top rotate1(.clk(clk), .rst(rst), .rotate_en(rotate_en), .donee(done2), .cnt_value(cnt_value2), .line_in(line_in2), 
+	rotate_top rotate1(.clk(clk), .rst(rst|| cnt_en_24), .rotate_en(rotate_en), .donee(done2), .cnt_value(cnt_value2), .line_in(line_in2), 
 							.write_enable(write_enable2), .write_value(write_value2), .data_out(mem_out_2));
-	permutation_func permutation1(.clk(clk), .rst(rst), .start(permute_en), .input_file_name("123456789123"), .output_file_name("1234567891234"), 
+	permutation_func permutation1(.clk(clk), .rst(rst|| cnt_en_24), .start(permute_en), .input_file_name("123456789123"), .output_file_name("1234567891234"), 
 				.donee(done3), .cnt_value(cnt_value3), .line_in(line_in3), .write_enable(write_enable3), .write_value(write_value3));
-	Revaluate revaluate1(.clk(clk), .rst(rst), .start(revaluate_en), .data_in(datain), .done(done4), .data_out(dataout));
-	addRC_Top addRC1(.clk(clk), .rst(rst), .addrc_en(addRC_en), .donee(done5), .cnt_value(cnt_value5), .line_in(line_in5),
+	Revaluate revaluate1(.clk(clk), .rst(rst|| cnt_en_24), .start(revaluate_en), .data_in(datain), .done(done4), .data_out(dataout));
+	addRC_Top addRC1(.clk(clk), .rst(rst|| cnt_en_24), .addrc_en(addRC_en), .donee(done5), .cnt_value(cnt_value5), .line_in(line_in5),
 					 .write_enable(write_enable5), .write_value(write_value5), .data_out(mem_out_5), .cnt24_value(addRC_i));
 
 endmodule
