@@ -46,7 +46,7 @@
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/addRC/addRC.v
 
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/encoder_top.v
-	vlog 	+acc -incr -source  +define+SIM		$hdl_path/rotate/requirements.v
+	vlog 	+acc -incr -source  +define+SIM		$hdl_path/requirements.v
 	vlog 	+acc -incr -source  +define+SIM 	$hdl_path/controller.v
 	vlog 	+acc -incr -source  +define+SIM		$hdl_path/datapath.v
 	vlog 	+acc -incr -source  +define+SIM 	./tb/$TB.v
